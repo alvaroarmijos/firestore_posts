@@ -1,21 +1,15 @@
-import 'package:posts_repository/src/enums/post_status.dart';
 import 'package:posts_repository/src/models/post.dart';
 
 /// Contract that defines the methods to interact with the
 /// posts repository.
 abstract class PostsRepositoryContract {
-  /// Future with all the posts in firestore.
-  Future<List<Post>> getPosts();
+  /// Future with all posts in firestore.
+  Future<List<Post>> getPosts(int startAfterTimestamp);
 
-  /// Updates post likes in Firebase.
-  Future<PostStatus> updatePostLikes(
+  /// Updates post likes/dislikes in Firebase.
+  Future<void> updatePostVotes(
     String postId,
     int likes,
-  );
-
-  /// Updates post dislikes in Firebase.
-  Future<PostStatus> updatePostDislikes(
-    String postId,
     int dislikes,
   );
 }

@@ -20,6 +20,8 @@ mixin _$Post {
   String get content;
   int get likes;
   int get dislikes;
+  int get timestamp;
+  UserVote get userVote;
 
   /// Create a copy of Post
   /// with the given fields replaced by the non-null parameter values.
@@ -41,17 +43,21 @@ mixin _$Post {
             (identical(other.content, content) || other.content == content) &&
             (identical(other.likes, likes) || other.likes == likes) &&
             (identical(other.dislikes, dislikes) ||
-                other.dislikes == dislikes));
+                other.dislikes == dislikes) &&
+            (identical(other.timestamp, timestamp) ||
+                other.timestamp == timestamp) &&
+            (identical(other.userVote, userVote) ||
+                other.userVote == userVote));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, id, author, content, likes, dislikes);
+  int get hashCode => Object.hash(
+      runtimeType, id, author, content, likes, dislikes, timestamp, userVote);
 
   @override
   String toString() {
-    return 'Post(id: $id, author: $author, content: $content, likes: $likes, dislikes: $dislikes)';
+    return 'Post(id: $id, author: $author, content: $content, likes: $likes, dislikes: $dislikes, timestamp: $timestamp, userVote: $userVote)';
   }
 }
 
@@ -61,7 +67,13 @@ abstract mixin class $PostCopyWith<$Res> {
       _$PostCopyWithImpl;
   @useResult
   $Res call(
-      {String id, String author, String content, int likes, int dislikes});
+      {String id,
+      String author,
+      String content,
+      int likes,
+      int dislikes,
+      int timestamp,
+      UserVote userVote});
 }
 
 /// @nodoc
@@ -81,6 +93,8 @@ class _$PostCopyWithImpl<$Res> implements $PostCopyWith<$Res> {
     Object? content = null,
     Object? likes = null,
     Object? dislikes = null,
+    Object? timestamp = null,
+    Object? userVote = null,
   }) {
     return _then(_self.copyWith(
       id: null == id
@@ -103,6 +117,14 @@ class _$PostCopyWithImpl<$Res> implements $PostCopyWith<$Res> {
           ? _self.dislikes
           : dislikes // ignore: cast_nullable_to_non_nullable
               as int,
+      timestamp: null == timestamp
+          ? _self.timestamp
+          : timestamp // ignore: cast_nullable_to_non_nullable
+              as int,
+      userVote: null == userVote
+          ? _self.userVote
+          : userVote // ignore: cast_nullable_to_non_nullable
+              as UserVote,
     ));
   }
 }
@@ -115,7 +137,9 @@ class _Post implements Post {
       required this.author,
       required this.content,
       required this.likes,
-      required this.dislikes});
+      required this.dislikes,
+      required this.timestamp,
+      this.userVote = UserVote.none});
   factory _Post.fromJson(Map<String, dynamic> json) => _$PostFromJson(json);
 
   @override
@@ -128,6 +152,11 @@ class _Post implements Post {
   final int likes;
   @override
   final int dislikes;
+  @override
+  final int timestamp;
+  @override
+  @JsonKey()
+  final UserVote userVote;
 
   /// Create a copy of Post
   /// with the given fields replaced by the non-null parameter values.
@@ -154,17 +183,21 @@ class _Post implements Post {
             (identical(other.content, content) || other.content == content) &&
             (identical(other.likes, likes) || other.likes == likes) &&
             (identical(other.dislikes, dislikes) ||
-                other.dislikes == dislikes));
+                other.dislikes == dislikes) &&
+            (identical(other.timestamp, timestamp) ||
+                other.timestamp == timestamp) &&
+            (identical(other.userVote, userVote) ||
+                other.userVote == userVote));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, id, author, content, likes, dislikes);
+  int get hashCode => Object.hash(
+      runtimeType, id, author, content, likes, dislikes, timestamp, userVote);
 
   @override
   String toString() {
-    return 'Post(id: $id, author: $author, content: $content, likes: $likes, dislikes: $dislikes)';
+    return 'Post(id: $id, author: $author, content: $content, likes: $likes, dislikes: $dislikes, timestamp: $timestamp, userVote: $userVote)';
   }
 }
 
@@ -175,7 +208,13 @@ abstract mixin class _$PostCopyWith<$Res> implements $PostCopyWith<$Res> {
   @override
   @useResult
   $Res call(
-      {String id, String author, String content, int likes, int dislikes});
+      {String id,
+      String author,
+      String content,
+      int likes,
+      int dislikes,
+      int timestamp,
+      UserVote userVote});
 }
 
 /// @nodoc
@@ -195,6 +234,8 @@ class __$PostCopyWithImpl<$Res> implements _$PostCopyWith<$Res> {
     Object? content = null,
     Object? likes = null,
     Object? dislikes = null,
+    Object? timestamp = null,
+    Object? userVote = null,
   }) {
     return _then(_Post(
       id: null == id
@@ -217,6 +258,14 @@ class __$PostCopyWithImpl<$Res> implements _$PostCopyWith<$Res> {
           ? _self.dislikes
           : dislikes // ignore: cast_nullable_to_non_nullable
               as int,
+      timestamp: null == timestamp
+          ? _self.timestamp
+          : timestamp // ignore: cast_nullable_to_non_nullable
+              as int,
+      userVote: null == userVote
+          ? _self.userVote
+          : userVote // ignore: cast_nullable_to_non_nullable
+              as UserVote,
     ));
   }
 }

@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:posts_repository/src/contract/posts_repository_contract.dart';
-import 'package:posts_repository/src/enums/post_status.dart';
+import 'package:posts_repository/src/exceptions/post.dart';
 import 'package:posts_repository/src/models/post.dart';
 
 /// {@template posts_repository}
@@ -37,47 +37,45 @@ class PostsRepository extends PostsRepositoryContract {
     Post post,
     SetOptions? _,
   ) {
-    return post.toJson()..remove('id');
+    return post.toJson()
+      ..remove('id')
+      ..remove('userVote');
   }
 
   @override
-  Future<List<Post>> getPosts() async {
-    return _postsCollection.get().then(_snapshotToList);
+  Future<List<Post>> getPosts(int startAfterTimestamp) async {
+    var query = _postsCollection.orderBy('timestamp', descending: true);
+
+    if (startAfterTimestamp > 0) {
+      query = query.startAfter([startAfterTimestamp]);
+    }
+
+    final snapshot = await query.limit(30).get();
+    return _snapshotToList(snapshot);
   }
 
   List<T> _snapshotToList<T>(QuerySnapshot<T> snapshot) {
-    return snapshot.docs.map((doc) => doc.data()).toList();
-  }
-
-  @override
-  Future<PostStatus> updatePostDislikes(String postId, int dislikes) async {
     try {
-      final docReference = _firestore.collection('users').doc(postId);
-
-      await docReference.set(
-        {'dislikes': dislikes},
-        SetOptions(merge: true),
-      );
-
-      return PostStatus.updated;
+      return snapshot.docs.map((doc) => doc.data()).toList();
     } catch (_) {
-      return PostStatus.error;
+      throw PostsFailure();
     }
   }
 
   @override
-  Future<PostStatus> updatePostLikes(String postId, int likes) async {
+  Future<void> updatePostVotes(String postId, int likes, int dislikes) async {
     try {
-      final docReference = _firestore.collection('users').doc(postId);
+      final docReference = _firestore.collection('posts').doc(postId);
 
       await docReference.set(
-        {'likes': likes},
+        {
+          'likes': likes,
+          'dislikes': dislikes,
+        },
         SetOptions(merge: true),
       );
-
-      return PostStatus.updated;
     } catch (_) {
-      return PostStatus.error;
+      throw VoteFailure();
     }
   }
 }

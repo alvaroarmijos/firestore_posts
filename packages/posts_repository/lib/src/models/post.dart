@@ -1,6 +1,7 @@
 // ignore_for_file: invalid_annotation_target
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:posts_repository/src/enums/user_vote.dart';
 
 part 'post.freezed.dart';
 part 'post.g.dart';
@@ -18,6 +19,8 @@ abstract class Post with _$Post {
     required String content,
     required int likes,
     required int dislikes,
+    required int timestamp,
+    @Default(UserVote.none) UserVote userVote,
   }) = _Post;
 
   /// Creates a new instance of [Post] from a JSON object.
